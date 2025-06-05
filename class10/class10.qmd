@@ -1,0 +1,149 @@
+---
+title: "Class 10: Structural Bioinformatics (pt.1)"
+author: "Claire Lua A16922295"
+format: html
+toc: true
+---
+
+## 1. The BDP Database
+
+The main repository of biomolecular structure data is called the [Protein Data Bank](http://www.rcsb.org/) (PDB for short). It is the second oldest database (after GenBank)
+
+What is currently in the PDB? We can access current composition stats [here](http://www.rcsb.org/)
+
+```{r}
+stats <- read.csv("Data Export Summary.csv", row.names=1)
+head(stats)
+```
+
+
+> Q1: What percentage of structures in the PDB are solved by X-Ray and Electron Microscopy.
+
+```{r}
+x <- stats$X.ray
+
+#Substitute comma for nothing 
+y <- gsub(",","",x)
+
+#Convert to numeric
+sum(as.numeric(y))
+```
+
+Turn this snippet into a function so I can use it any time I have this comma problem (i.e. the other columns of this `stats` table)
+
+```{r}
+comma.sum <- function(x) {
+  #Substitute comma for nothing 
+  y <- gsub(",","",x)
+  #Convert to numeric
+  return(sum(as.numeric(y)))
+}
+```
+
+```{r}
+xray.sum <- comma.sum(stats$X.ray)
+em.sum <- comma.sum(stats$EM)
+total.sum <- comma.sum(stats$Total)
+```
+
+
+> Q2: What proportion of structures in the PDB are protein?
+
+```{r}
+protein <- comma.sum(stats[1,"Total"])
+protein_percent <- protein / total.sum * 100
+protein_percent
+```
+
+
+> Q3: Type HIV in the PDB website search box on the home page and determine how many HIV-1 protease structures are in the current PDB?
+
+SKIPPED
+
+
+## 2. Visualizing with Mol-star
+
+Explore the HIV-1 protease structure with PDB code: `1HSG`
+Mol-star homepage at https://molstar.org/viewer/.
+
+![Figure1. A first view of HIV-Pr](1HSG.png)
+![Figure2.] (1HSG.2.png)
+![Figure3.] (1HSG.3.png)
+
+
+## 3. Using the bio3d package in R
+
+The Bio3D package is focued on structural bioinformatics
+
+
+```{r}
+library(bio3d)
+```
+
+```{r}
+pdb <- read.pdb("1hsg")
+pdb
+```
+
+We can see atom data with `pdb$atom`:
+
+```{r}
+head(pdb$atom)
+```
+
+```{r}
+head(pdbseq(pdb))
+```
+
+
+## 3. Visualization in R
+
+We can make quick 3D viz with the 
+
+```{r}
+library(bio3dview)
+view.pdb(pdb, backgroundColor = "lightblue", colorScheme = "sse")
+```
+
+```{r}
+sel <- atom.select(pdb, resno=25)
+view.pdb(pdb, cols=c("pink","lightblue"),
+         highlight = sel,
+         highlight.style = "spacefill")
+```
+
+## Predicting functional motions of a single structure
+
+We can finish off today with a bioinformatics prediction of the functional motions of a protein
+
+We will run a Normal Mode Analysis (NMA)
+
+```{r}
+adk <- read.pdb("6s36")
+```
+
+```{r}
+adk
+```
+```{r}
+m <- nma(adk)
+```
+
+```{r}
+plot(m)
+```
+```{r}
+mktrj(m, file="adk_m7.pdb")
+```
+
+```{r}
+view.nma(m, pdb=adk)
+```
+
+
+
+
+
+
+
+
