@@ -1,0 +1,39 @@
+Nano is a very basic text editor that is available everywhere
+
+
+Some important unix cmds:
+
+pwd: where we are in the file system
+cd: change directory
+ls: list of content of the current directory
+mkdir: make a new directory
+rm: remove files and folders **WARNING**
+nano: text editor
+head: view the top of the file
+tail: view the bottom of the file
+less: page through a file
+
+
+Useful shortcuts:
+- The TAB key for auto complete
+- the ~ for home area
+- the ../ for dropping to the parent directory
+
+
+Instance ID
+
+i-0f8c04034058b75e1 (bimm143_claire)
+- Open an SSH client.
+- Locate your private key file. The key used to launch this instance is bimm143_clua.pem
+- Run this command, if necessary, to ensure your key is not publicly viewable.
+
+chmod 400 "~/Downloads/bimm143_clua.pem"
+
+Connect to your instance using its Public DNS:
+ec2-35-92-83-86.us-west-2.compute.amazonaws.com
+
+Example:
+ssh -i ~/Downloads/bimm143_clua.pem ubuntu@ec2-35-92-83-86.us-west-2.compute.amazonaws.com
+
+To Copy:
+scp -i ~/Downloads/bimm143_clua.pem ubuntu@ec2-35-92-83-86.us-west-2.compute.amazonaws.com:/home/ubuntu/work/nm-second.x.zebrafish.tsv results.tsv

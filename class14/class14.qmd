@@ -1,0 +1,169 @@
+---
+title: "Class 14: RNASeq mini-project"
+author: "Claire Lua A16922295"
+format: pdf
+toc: true
+---
+
+
+```{r, message=FALSE}
+library(DESeq2)
+library(AnnotationDbi)
+library(org.Hs.eg.db)
+library(pathview)
+```
+
+
+## Data Import
+
+```{r}
+colData <- read.csv("GSE37704_metadata.csv", row.names=1)
+countData <- read.csv("GSE37704_featurecounts.csv", row.names=1)
+```
+
+```{r}
+head(colData)
+```
+```{r}
+head(countData)
+```
+
+Check the corespondance of colData rows and countData columns.
+
+```{r}
+rownames(colData)
+```
+
+Remove the troublesome first column so we match the metadata
+```{r}
+counts <- countData[,-1]
+```
+
+```{r}
+all(rownames(colData) == colnames(counts))
+```
+
+
+# Remove zero count genes
+
+We will have rows in `counts` for genes that we cannot say anything about because they have zero expression in the particular tissue we are looking at.
+
+```{r}
+head(counts)
+```
+
+If the `rowSums()` is zero then a give gene (i.e. row) has no count data and we should exclude these genes from future consideration
+
+```{r}
+to.keep <- rowSums(counts) != 0
+cleancounts <- counts[to.keep, ]
+```
+
+> Q. How many genes do we have left?
+
+```{r}
+nrow(cleancounts)
+```
+
+
+# Setup DESeq object for analysis
+
+```{r}
+dds = DESeqDataSetFromMatrix(countData=cleancounts,
+                             colData=colData,
+                             design= ~condition)
+```
+
+
+# Run DESeq analysis
+
+```{r}
+dds <- DESeq(dds)
+```
+
+
+# Extract the results
+
+```{r}
+res <- results(dds)
+head(res)
+```
+
+# Add gene annotation
+
+```{r}
+columns(org.Hs.eg.db)
+
+res$symbol = mapIds(org.Hs.eg.db,
+                    keys=rownames(res), 
+                    keytype="ENSEMBL",
+                    column="SYMBOL",
+                    multiVals="first")
+
+res$entrez = mapIds(org.Hs.eg.db,
+                    keys=rownames(res),
+                    keytype="ENSEMBL",
+                    column="ENTREZID",
+                    multiVals="first")
+
+res$name =   mapIds(org.Hs.eg.db,
+                    keys=row.names(res),
+                    keytype="ENSEMBL",
+                    column="GENENAME",
+                    multiVals="first")
+
+head(res, 10)
+```
+
+# Result visualization
+
+# Save my results to a CSV file
+
+```{r}
+write.csv(res,file="results.csv")
+```
+
+
+# Pathway analysis
+
+```{r}
+#pathview(gene.data=foldchanges, pathway.id="hsa04110")
+```
+
+# Gene Ontology (GO) genesets
+
+```{r}
+data(go.sets.hs)
+data(go.subs)
+```
+
+```{r}
+#gobpres = gage(foldchanges,)
+```
+
+```{r}
+#head(gobpres$less, 5)
+```
+
+
+## Reactome analysis online
+
+We need to make a little file of our significant genes that we can upload to the reactome webpage:
+
+```{r}
+sig_genes <- res[res$padj <= 0.05 & !is.na(res$padj), "symbol"]
+print(paste("Total number of significant genes:", length(sig_genes)))
+```
+
+```{r}
+sig_genes[6]
+```
+
+```{r}
+write.table(sig_genes, file="significant_genes.txt", 
+            row.names=FALSE, col.names=FALSE, quote=FALSE)
+```
+
+Then, to perform pathway analysis online go to the Reactome website (https://reactome.org/PathwayBrowser/#TOOL=AT). Select “choose file” to upload your significant gene list. Then, select the parameters “Project to Humans”, then click “Analyze”.
+
+

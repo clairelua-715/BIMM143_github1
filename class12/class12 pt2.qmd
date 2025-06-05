@@ -1,0 +1,53 @@
+---
+title: "Class12: Population Analysis"
+author: "Claire Lua A16922295"
+format: pdf
+---
+
+> Q13. Read this file into R and determine the sample size for each genotype and their
+corresponding median expression levels for each of these genotypes. 
+
+Hint: The read.table(),
+summary() and boxplot() functions will likely be useful here. There is an example R script
+online to be used ONLY if you are struggling in vein. Note that you can find the medium value
+from saving the output of the boxplot() function to an R object and examining this object.
+There is also the medium() and summary() function that you can use to check your
+understanding.
+
+
+```{r}
+ppl <- read.table("rs8067378_ENSG00000172057.6.txt")
+head(ppl)
+```
+
+```{r}
+table(ppl$geno)
+```
+
+
+> Q14. Generate a boxplot with a box per genotype, what could you infer from the relative
+expression value between A/A and G/G displayed in this plot? Does the SNP effect the
+expression of ORMDL3? 
+
+Hint: An example boxplot is provided overleaf – yours does not need to be as polished as this one.
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+plot <- ggplot(ppl, aes(geno, exp)) +
+  geom_boxplot() +
+  stat_summary(fun = "median") +
+  labs(title = "ORMDL3 Expression", "Geno", "Exp")
+
+plot
+```
+
+```{r}
+summary(plot)
+```
+
+
+
+
