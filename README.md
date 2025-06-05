@@ -1,24 +1,34 @@
 # BIMM143
 My class work from [BIMM143 S25](https://bioboot.github.io/bimm143_S25/) at UC San Diego
 
-- 04 [Intro to R]()
+- Class 04: [Intro to R]()
 
-- 05 [Advanced graphics with **ggplot2**](
+- Class 05: [Advanced graphics with **ggplot2**](
 
-- 06 R functions
+- Class 06: [R functions]()
 
-- 07
+- Class 07: [Introduction to Machine Learning]()
 
-- 08
+- Class 08: [Mini-Project]()
 
-- 09
+- Class 09: [Halloween Candy Mini-Project]()
 
-- 10
+- Class 10: [Structural Bioinformatics (pt1)]()
 
-- 11
+- Class 11: [Structural Bioinformatics (pt2)]()
 
-- 12
+- Class 12: [Genome Informatics]()
 
-- 13
+- Class 13: [Transcriptomics and the Analysis of RNA-Seq Data]()
 
-- 14
+- Class 14: [RNA-Seq Analysis Mini-Project]()
+
+- Class 15: [Hands-on with Git and GitHub]()
+
+- Class 16: [Essential UNIX for Bioinformatics]()
+
+- Class 17: [Analyzing Sequencing Data in the Cloud]()
+
+- Class 18: [Mini Project: Investigating Pertussis Resurgence]()
+
+- Class 19: [Mini Project: Cancer Mutation Analysis]()
